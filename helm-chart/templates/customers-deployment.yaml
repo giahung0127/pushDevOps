@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customers
+  labels:
+    app: customers
+spec:
+  replicas: {{ .Values.customers.replicaCount }}
+  selector:
+    matchLabels:
+      app: customers
+  template:
+    metadata:
+      labels:
+        app: customers
+    spec:
+      containers:
+        - name: customers
+          image: "{{ .Values.global.dockerRegistry }}/{{ .Values.customers.image.repository }}:{{ .Values.customers.image.tag }}"
+          imagePullPolicy: {{ .Values.customers.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.customers.service.port }}
+          env:
+            {{- range $key, $value := .Values.customers.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.customers.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.customers.service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.customers.service.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 15 

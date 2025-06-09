@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: petclinic-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: petclinic.local
+      http:
+        paths:
+          - path: /api/customers
+            pathType: Prefix
+            backend:
+              service:
+                name: customers
+                port:
+                  number: {{ .Values.customers.service.port }}
+          - path: /api/visits
+            pathType: Prefix
+            backend:
+              service:
+                name: visits
+                port:
+                  number: {{ .Values.visits.service.port }}
+          - path: /api/vets
+            pathType: Prefix
+            backend:
+              service:
+                name: vets
+                port:
+                  number: {{ .Values.vets.service.port }}
+          - path: /api/genai
+            pathType: Prefix
+            backend:
+              service:
+                name: genai
+                port:
+                  number: {{ .Values.genai.service.port }}
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway
+                port:
+                  number: {{ .Values.apiGateway.service.port }}

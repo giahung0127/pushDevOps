@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vets
+  labels:
+    app: vets
+spec:
+  replicas: {{ .Values.vets.replicaCount }}
+  selector:
+    matchLabels:
+      app: vets
+  template:
+    metadata:
+      labels:
+        app: vets
+    spec:
+      containers:
+        - name: vets
+          image: "{{ .Values.global.dockerRegistry }}/{{ .Values.vets.image.repository }}:{{ .Values.vets.image.tag }}"
+          imagePullPolicy: {{ .Values.vets.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.vets.service.port }}
+          env:
+            {{- range $key, $value := .Values.vets.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.vets.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.vets.service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.vets.service.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 15 

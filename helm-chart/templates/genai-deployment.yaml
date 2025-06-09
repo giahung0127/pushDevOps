@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: genai
+  labels:
+    app: genai
+spec:
+  replicas: {{ .Values.genai.replicaCount }}
+  selector:
+    matchLabels:
+      app: genai
+  template:
+    metadata:
+      labels:
+        app: genai
+    spec:
+      containers:
+        - name: genai
+          image: "{{ .Values.global.dockerRegistry }}/{{ .Values.genai.image.repository }}:{{ .Values.genai.image.tag }}"
+          imagePullPolicy: {{ .Values.genai.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.genai.service.port }}
+          env:
+            {{- range $key, $value := .Values.genai.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.genai.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.genai.service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.genai.service.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 15 

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vets
+  labels:
+    app: vets
+spec:
+  type: {{ .Values.vets.service.type }}
+  ports:
+    - port: {{ .Values.vets.service.port }}
+      targetPort: {{ .Values.vets.service.port }}
+      protocol: TCP
+  selector:
+    app: vets

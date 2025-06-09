@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visits
+  labels:
+    app: visits
+spec:
+  replicas: {{ .Values.visits.replicaCount }}
+  selector:
+    matchLabels:
+      app: visits
+  template:
+    metadata:
+      labels:
+        app: visits
+    spec:
+      containers:
+        - name: visits
+          image: "{{ .Values.global.dockerRegistry }}/{{ .Values.visits.image.repository }}:{{ .Values.visits.image.tag }}"
+          imagePullPolicy: {{ .Values.visits.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.visits.service.port }}
+          env:
+            {{- range $key, $value := .Values.visits.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.visits.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.visits.service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.visits.service.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 15 

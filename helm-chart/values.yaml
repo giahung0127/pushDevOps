@@ -1,0 +1,197 @@
+# Global settings
+global:
+  dockerRegistry: ""
+  imagePullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Customers Service
+customers:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: lennox2004/spring-petclinic-customers-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8081
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    SPRING_PROFILES_ACTIVE: "docker"
+    SERVER_PORT: 8081
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/petclinic"
+    SPRING_DATASOURCE_USERNAME: "petclinic"
+    SPRING_DATASOURCE_PASSWORD: "petclinic"
+
+# Visits Service
+visits:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: lennox2004/spring-petclinic-visits-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8082
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    SPRING_PROFILES_ACTIVE: "docker"
+    SERVER_PORT: 8082
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/petclinic"
+    SPRING_DATASOURCE_USERNAME: "petclinic"
+    SPRING_DATASOURCE_PASSWORD: "petclinic"
+
+# Vets Service
+vets:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: lennox2004/spring-petclinic-vets-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8083
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    SPRING_PROFILES_ACTIVE: "docker"
+    SERVER_PORT: 8083
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/petclinic"
+    SPRING_DATASOURCE_USERNAME: "petclinic"
+    SPRING_DATASOURCE_PASSWORD: "petclinic"
+
+# GenAI Service
+genai:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: lennox2004/spring-petclinic-genai-service
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8084
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    SPRING_PROFILES_ACTIVE: "docker"
+    SERVER_PORT: 8084
+
+# API Gateway
+apiGateway:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: lennox2004/spring-petclinic-api-gateway
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: NodePort
+    port: 8080
+    nodePort: 30080
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    SPRING_PROFILES_ACTIVE: "docker"
+    SERVER_PORT: 8080
+
+# Discovery Server
+discoveryServer:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: lennox2004/spring-petclinic-discovery-server
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8761
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    SPRING_PROFILES_ACTIVE: "docker"
+    SERVER_PORT: 8761
+
+# Config Server
+configServer:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: lennox2004/spring-petclinic-config-server
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8888
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    SPRING_PROFILES_ACTIVE: "docker"
+    SERVER_PORT: 8888
+
+# Admin Server
+adminServer:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: lennox2004/spring-petclinic-admin-server
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 9090
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    SPRING_PROFILES_ACTIVE: "docker"
+    SERVER_PORT: 9090

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: visits
+  labels:
+    app: visits
+spec:
+  type: {{ .Values.visits.service.type }}
+  ports:
+    - port: {{ .Values.visits.service.port }}
+      targetPort: {{ .Values.visits.service.port }}
+      protocol: TCP
+  selector:
+    app: visits
