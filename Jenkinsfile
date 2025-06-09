@@ -46,7 +46,8 @@ pipeline {
                         'spring-petclinic-customers-service',
                         'spring-petclinic-visits-service',
                         'spring-petclinic-vets-service',
-                        'spring-petclinic-genai-service'
+                        'spring-petclinic-genai-service',
+                        'spring-petclinic-api-gateway'
                     ]
                     
                     // Kiểm tra từng thư mục service xem có thay đổi không
