@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: customers
-          image: "{{ .Values.global.dockerRegistry }}/{{ .Values.customers.image.repository }}:{{ .Values.customers.image.tag }}"
+          image: "{{ if .Values.global.dockerRegistry }}{{ .Values.global.dockerRegistry }}/{{ end }}{{ .Values.customers.image.repository }}:{{ .Values.customers.image.tag }}"
           imagePullPolicy: {{ .Values.customers.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.customers.service.port }}

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: visits
-          image: "{{ .Values.global.dockerRegistry }}/{{ .Values.visits.image.repository }}:{{ .Values.visits.image.tag }}"
+          image: "{{ if .Values.global.dockerRegistry }}{{ .Values.global.dockerRegistry }}/{{ end }}{{ .Values.visits.image.repository }}:{{ .Values.visits.image.tag }}"
           imagePullPolicy: {{ .Values.visits.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.visits.service.port }}

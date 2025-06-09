@@ -364,7 +364,6 @@ pipeline {
             // Clean up Docker
             sh """
                 docker logout
-                docker system prune -f
             """
         }
     }

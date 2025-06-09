@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: vets
-          image: "{{ .Values.global.dockerRegistry }}/{{ .Values.vets.image.repository }}:{{ .Values.vets.image.tag }}"
+          image: "{{ if .Values.global.dockerRegistry }}{{ .Values.global.dockerRegistry }}/{{ end }}{{ .Values.vets.image.repository }}:{{ .Values.vets.image.tag }}"
           imagePullPolicy: {{ .Values.vets.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.vets.service.port }}

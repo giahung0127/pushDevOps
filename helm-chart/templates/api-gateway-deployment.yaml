@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  labels:
+    app: api-gateway
+spec:
+  replicas: {{ .Values.apiGateway.replicaCount }}
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: "{{ if .Values.global.dockerRegistry }}{{ .Values.global.dockerRegistry }}/{{ end }}{{ .Values.apiGateway.image.repository }}:{{ .Values.apiGateway.image.tag }}"
+          imagePullPolicy: {{ .Values.apiGateway.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.apiGateway.service.port }}
+          env:
+            {{- range $key, $value := .Values.apiGateway.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.apiGateway.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.apiGateway.service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: {{ .Values.apiGateway.service.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 15 

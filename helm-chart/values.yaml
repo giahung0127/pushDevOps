@@ -116,9 +116,8 @@ apiGateway:
     tag: latest
     pullPolicy: IfNotPresent
   service:
-    type: NodePort
+    type: ClusterIP
     port: 8080
-    nodePort: 30080
   resources:
     requests:
       cpu: 100m
